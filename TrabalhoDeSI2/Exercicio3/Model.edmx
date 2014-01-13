@@ -1,0 +1,686 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SI2_1314i_TPModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Aluguer">
+          <Key>
+            <PropertyRef Name="ref" />
+          </Key>
+          <Property Name="ref" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="data_reserva" Type="datetime" Nullable="false" />
+          <Property Name="local_recolha" Type="int" Nullable="false" />
+          <Property Name="datahora_recolha" Type="datetime" Nullable="false" />
+          <Property Name="local_entrega" Type="int" Nullable="false" />
+          <Property Name="datahora_entrega" Type="datetime" Nullable="false" />
+          <Property Name="tarifa_base_a_aplicar" Type="money" Nullable="false" />
+          <Property Name="nr_dias" Type="int" Nullable="false" />
+          <Property Name="valor_total" Type="money" />
+          <Property Name="estado" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="cliente" Type="int" Nullable="false" />
+          <Property Name="rentacar" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="grupo" Type="varchar" MaxLength="12" Nullable="false" />
+          <Property Name="veiculo" Type="char" MaxLength="8" />
+          <Property Name="km_inicio" Type="real" />
+          <Property Name="km_fim" Type="real" />
+        </EntityType>
+        <EntityType Name="Cliente">
+          <Key>
+            <PropertyRef Name="nr_cliente" />
+          </Key>
+          <Property Name="nr_cliente" Type="int" Nullable="false" />
+          <Property Name="nome" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="telefone" Type="int" Nullable="false" />
+          <Property Name="nif" Type="int" Nullable="false" />
+          <Property Name="pontos" Type="int" Nullable="false" />
+          <Property Name="tipo" Type="char" MaxLength="1" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Empresa_Aluguer">
+          <Key>
+            <PropertyRef Name="nome" />
+          </Key>
+          <Property Name="nome" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="morada" Type="varchar" MaxLength="250" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Grupo">
+          <Key>
+            <PropertyRef Name="designacao" />
+          </Key>
+          <Property Name="designacao" Type="varchar" MaxLength="12" Nullable="false" />
+          <Property Name="descrição" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="freesale" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Local">
+          <Key>
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codigo" Type="int" Nullable="false" />
+          <Property Name="nome" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="morada" Type="varchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="LogEvento">
+          <Key>
+            <PropertyRef Name="ref" />
+          </Key>
+          <Property Name="ref" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="aluguer" Type="int" Nullable="false" />
+          <Property Name="data" Type="datetime" Nullable="false" />
+          <Property Name="mensagem" Type="varchar" MaxLength="250" />
+          <Property Name="tipo" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Precario">
+          <Key>
+            <PropertyRef Name="rentacar" />
+            <PropertyRef Name="grupo" />
+          </Key>
+          <Property Name="rentacar" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="grupo" Type="varchar" MaxLength="12" Nullable="false" />
+          <Property Name="tarifa_base" Type="money" Nullable="false" />
+          <Property Name="quota_freesale" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Veiculo">
+          <Key>
+            <PropertyRef Name="matricula" />
+          </Key>
+          <Property Name="ref" Type="int" Nullable="false" />
+          <Property Name="rentacar" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="data_registo" Type="datetime" Nullable="false" />
+          <Property Name="matricula" Type="char" MaxLength="8" Nullable="false" />
+          <Property Name="marca" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="modelo" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="ano_modelo" Type="date" />
+          <Property Name="cor" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="nr_portas" Type="int" Nullable="false" />
+          <Property Name="kilom_actual" Type="real" Nullable="false" />
+          <Property Name="grupo" Type="varchar" MaxLength="12" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Aluguer__41EDCAC5">
+          <End Role="Precario" Type="Self.Precario" Multiplicity="1" />
+          <End Role="Aluguer" Type="Self.Aluguer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Precario">
+              <PropertyRef Name="rentacar" />
+              <PropertyRef Name="grupo" />
+            </Principal>
+            <Dependent Role="Aluguer">
+              <PropertyRef Name="rentacar" />
+              <PropertyRef Name="grupo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Aluguer__cliente__40058253">
+          <End Role="Cliente" Type="Self.Cliente" Multiplicity="1" />
+          <End Role="Aluguer" Type="Self.Aluguer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="nr_cliente" />
+            </Principal>
+            <Dependent Role="Aluguer">
+              <PropertyRef Name="cliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Aluguer__local_e__3F115E1A">
+          <End Role="Local" Type="Self.Local" Multiplicity="1" />
+          <End Role="Aluguer" Type="Self.Aluguer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Local">
+              <PropertyRef Name="codigo" />
+            </Principal>
+            <Dependent Role="Aluguer">
+              <PropertyRef Name="local_entrega" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Aluguer__local_r__3E1D39E1">
+          <End Role="Local" Type="Self.Local" Multiplicity="1" />
+          <End Role="Aluguer" Type="Self.Aluguer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Local">
+              <PropertyRef Name="codigo" />
+            </Principal>
+            <Dependent Role="Aluguer">
+              <PropertyRef Name="local_recolha" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Aluguer__veiculo__40F9A68C">
+          <End Role="Veiculo" Type="Self.Veiculo" Multiplicity="0..1" />
+          <End Role="Aluguer" Type="Self.Aluguer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Veiculo">
+              <PropertyRef Name="matricula" />
+            </Principal>
+            <Dependent Role="Aluguer">
+              <PropertyRef Name="veiculo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__LogEvento__alugu__45BE5BA9">
+          <End Role="Aluguer" Type="Self.Aluguer" Multiplicity="1" />
+          <End Role="LogEvento" Type="Self.LogEvento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Aluguer">
+              <PropertyRef Name="ref" />
+            </Principal>
+            <Dependent Role="LogEvento">
+              <PropertyRef Name="aluguer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Precario__grupo__3B40CD36">
+          <End Role="Grupo" Type="Self.Grupo" Multiplicity="1" />
+          <End Role="Precario" Type="Self.Precario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grupo">
+              <PropertyRef Name="designacao" />
+            </Principal>
+            <Dependent Role="Precario">
+              <PropertyRef Name="grupo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Precario__rentac__3A4CA8FD">
+          <End Role="Empresa_Aluguer" Type="Self.Empresa_Aluguer" Multiplicity="1" />
+          <End Role="Precario" Type="Self.Precario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresa_Aluguer">
+              <PropertyRef Name="nome" />
+            </Principal>
+            <Dependent Role="Precario">
+              <PropertyRef Name="rentacar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Veiculo__grupo__37703C52">
+          <End Role="Grupo" Type="Self.Grupo" Multiplicity="1" />
+          <End Role="Veiculo" Type="Self.Veiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grupo">
+              <PropertyRef Name="designacao" />
+            </Principal>
+            <Dependent Role="Veiculo">
+              <PropertyRef Name="grupo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Veiculo__rentaca__367C1819">
+          <End Role="Empresa_Aluguer" Type="Self.Empresa_Aluguer" Multiplicity="1" />
+          <End Role="Veiculo" Type="Self.Veiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresa_Aluguer">
+              <PropertyRef Name="nome" />
+            </Principal>
+            <Dependent Role="Veiculo">
+              <PropertyRef Name="rentacar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SI2_1314i_TPModelStoreContainer">
+          <EntitySet Name="Aluguer" EntityType="Self.Aluguer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cliente" EntityType="Self.Cliente" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Empresa_Aluguer" EntityType="Self.Empresa_Aluguer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Grupo" EntityType="Self.Grupo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Local" EntityType="Self.Local" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LogEvento" EntityType="Self.LogEvento" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Precario" EntityType="Self.Precario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Veiculo" EntityType="Self.Veiculo" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Aluguer__41EDCAC5" Association="Self.FK__Aluguer__41EDCAC5">
+            <End Role="Precario" EntitySet="Precario" />
+            <End Role="Aluguer" EntitySet="Aluguer" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Aluguer__cliente__40058253" Association="Self.FK__Aluguer__cliente__40058253">
+            <End Role="Cliente" EntitySet="Cliente" />
+            <End Role="Aluguer" EntitySet="Aluguer" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Aluguer__local_e__3F115E1A" Association="Self.FK__Aluguer__local_e__3F115E1A">
+            <End Role="Local" EntitySet="Local" />
+            <End Role="Aluguer" EntitySet="Aluguer" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Aluguer__local_r__3E1D39E1" Association="Self.FK__Aluguer__local_r__3E1D39E1">
+            <End Role="Local" EntitySet="Local" />
+            <End Role="Aluguer" EntitySet="Aluguer" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Aluguer__veiculo__40F9A68C" Association="Self.FK__Aluguer__veiculo__40F9A68C">
+            <End Role="Veiculo" EntitySet="Veiculo" />
+            <End Role="Aluguer" EntitySet="Aluguer" />
+          </AssociationSet>
+          <AssociationSet Name="FK__LogEvento__alugu__45BE5BA9" Association="Self.FK__LogEvento__alugu__45BE5BA9">
+            <End Role="Aluguer" EntitySet="Aluguer" />
+            <End Role="LogEvento" EntitySet="LogEvento" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Precario__grupo__3B40CD36" Association="Self.FK__Precario__grupo__3B40CD36">
+            <End Role="Grupo" EntitySet="Grupo" />
+            <End Role="Precario" EntitySet="Precario" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Precario__rentac__3A4CA8FD" Association="Self.FK__Precario__rentac__3A4CA8FD">
+            <End Role="Empresa_Aluguer" EntitySet="Empresa_Aluguer" />
+            <End Role="Precario" EntitySet="Precario" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Veiculo__grupo__37703C52" Association="Self.FK__Veiculo__grupo__37703C52">
+            <End Role="Grupo" EntitySet="Grupo" />
+            <End Role="Veiculo" EntitySet="Veiculo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Veiculo__rentaca__367C1819" Association="Self.FK__Veiculo__rentaca__367C1819">
+            <End Role="Empresa_Aluguer" EntitySet="Empresa_Aluguer" />
+            <End Role="Veiculo" EntitySet="Veiculo" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SI2_1314i_TPModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Aluguer">
+          <Key>
+            <PropertyRef Name="ref" />
+          </Key>
+          <Property Name="ref" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="data_reserva" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="local_recolha" Type="Int32" Nullable="false" />
+          <Property Name="datahora_recolha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="local_entrega" Type="Int32" Nullable="false" />
+          <Property Name="datahora_entrega" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="tarifa_base_a_aplicar" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="nr_dias" Type="Int32" Nullable="false" />
+          <Property Name="valor_total" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="estado" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="cliente" Type="Int32" Nullable="false" />
+          <Property Name="rentacar" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="grupo" Type="String" MaxLength="12" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="veiculo" Type="String" MaxLength="8" FixedLength="true" Unicode="false" />
+          <Property Name="km_inicio" Type="Single" />
+          <Property Name="km_fim" Type="Single" />
+          <NavigationProperty Name="Precario" Relationship="Self.FK__Aluguer__41EDCAC5" FromRole="Aluguer" ToRole="Precario" />
+          <NavigationProperty Name="Cliente1" Relationship="Self.FK__Aluguer__cliente__40058253" FromRole="Aluguer" ToRole="Cliente" />
+          <NavigationProperty Name="Local" Relationship="Self.FK__Aluguer__local_e__3F115E1A" FromRole="Aluguer" ToRole="Local" />
+          <NavigationProperty Name="Local1" Relationship="Self.FK__Aluguer__local_r__3E1D39E1" FromRole="Aluguer" ToRole="Local" />
+          <NavigationProperty Name="Veiculo1" Relationship="Self.FK__Aluguer__veiculo__40F9A68C" FromRole="Aluguer" ToRole="Veiculo" />
+          <NavigationProperty Name="LogEvento" Relationship="Self.FK__LogEvento__alugu__45BE5BA9" FromRole="Aluguer" ToRole="LogEvento" />
+        </EntityType>
+        <EntityType Name="Cliente">
+          <Key>
+            <PropertyRef Name="nr_cliente" />
+          </Key>
+          <Property Name="nr_cliente" Type="Int32" Nullable="false" />
+          <Property Name="nome" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="telefone" Type="Int32" Nullable="false" />
+          <Property Name="nif" Type="Int32" Nullable="false" />
+          <Property Name="pontos" Type="Int32" Nullable="false" />
+          <Property Name="tipo" Type="String" MaxLength="1" FixedLength="true" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Aluguer" Relationship="Self.FK__Aluguer__cliente__40058253" FromRole="Cliente" ToRole="Aluguer" />
+        </EntityType>
+        <EntityType Name="Empresa_Aluguer">
+          <Key>
+            <PropertyRef Name="nome" />
+          </Key>
+          <Property Name="nome" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="morada" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Precario" Relationship="Self.FK__Precario__rentac__3A4CA8FD" FromRole="Empresa_Aluguer" ToRole="Precario" />
+          <NavigationProperty Name="Veiculo" Relationship="Self.FK__Veiculo__rentaca__367C1819" FromRole="Empresa_Aluguer" ToRole="Veiculo" />
+        </EntityType>
+        <EntityType Name="Grupo">
+          <Key>
+            <PropertyRef Name="designacao" />
+          </Key>
+          <Property Name="designacao" Type="String" MaxLength="12" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="descrição" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="freesale" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Precario" Relationship="Self.FK__Precario__grupo__3B40CD36" FromRole="Grupo" ToRole="Precario" />
+          <NavigationProperty Name="Veiculo" Relationship="Self.FK__Veiculo__grupo__37703C52" FromRole="Grupo" ToRole="Veiculo" />
+        </EntityType>
+        <EntityType Name="Local">
+          <Key>
+            <PropertyRef Name="codigo" />
+          </Key>
+          <Property Name="codigo" Type="Int32" Nullable="false" />
+          <Property Name="nome" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="morada" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Aluguer" Relationship="Self.FK__Aluguer__local_e__3F115E1A" FromRole="Local" ToRole="Aluguer" />
+          <NavigationProperty Name="Aluguer1" Relationship="Self.FK__Aluguer__local_r__3E1D39E1" FromRole="Local" ToRole="Aluguer" />
+        </EntityType>
+        <EntityType Name="LogEvento">
+          <Key>
+            <PropertyRef Name="ref" />
+          </Key>
+          <Property Name="ref" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="aluguer" Type="Int32" Nullable="false" />
+          <Property Name="data" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="mensagem" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="tipo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Aluguer1" Relationship="Self.FK__LogEvento__alugu__45BE5BA9" FromRole="LogEvento" ToRole="Aluguer" />
+        </EntityType>
+        <EntityType Name="Precario">
+          <Key>
+            <PropertyRef Name="rentacar" />
+            <PropertyRef Name="grupo" />
+          </Key>
+          <Property Name="rentacar" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="grupo" Type="String" MaxLength="12" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="tarifa_base" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="quota_freesale" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Aluguer" Relationship="Self.FK__Aluguer__41EDCAC5" FromRole="Precario" ToRole="Aluguer" />
+          <NavigationProperty Name="Empresa_Aluguer" Relationship="Self.FK__Precario__rentac__3A4CA8FD" FromRole="Precario" ToRole="Empresa_Aluguer" />
+          <NavigationProperty Name="Grupo1" Relationship="Self.FK__Precario__grupo__3B40CD36" FromRole="Precario" ToRole="Grupo" />
+        </EntityType>
+        <EntityType Name="Veiculo">
+          <Key>
+            <PropertyRef Name="matricula" />
+          </Key>
+          <Property Name="ref" Type="Int32" Nullable="false" />
+          <Property Name="rentacar" Type="String" MaxLength="15" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="data_registo" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="matricula" Type="String" MaxLength="8" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="marca" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="modelo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ano_modelo" Type="DateTime" Precision="0" />
+          <Property Name="cor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nr_portas" Type="Int32" Nullable="false" />
+          <Property Name="kilom_actual" Type="Single" Nullable="false" />
+          <Property Name="grupo" Type="String" MaxLength="12" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Aluguer" Relationship="Self.FK__Aluguer__veiculo__40F9A68C" FromRole="Veiculo" ToRole="Aluguer" />
+          <NavigationProperty Name="Empresa_Aluguer" Relationship="Self.FK__Veiculo__rentaca__367C1819" FromRole="Veiculo" ToRole="Empresa_Aluguer" />
+          <NavigationProperty Name="Grupo1" Relationship="Self.FK__Veiculo__grupo__37703C52" FromRole="Veiculo" ToRole="Grupo" />
+        </EntityType>
+        <Association Name="FK__Aluguer__41EDCAC5">
+          <End Role="Precario" Type="Self.Precario" Multiplicity="1" />
+          <End Role="Aluguer" Type="Self.Aluguer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Precario">
+              <PropertyRef Name="rentacar" />
+              <PropertyRef Name="grupo" />
+            </Principal>
+            <Dependent Role="Aluguer">
+              <PropertyRef Name="rentacar" />
+              <PropertyRef Name="grupo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Aluguer__cliente__40058253">
+          <End Role="Cliente" Type="Self.Cliente" Multiplicity="1" />
+          <End Role="Aluguer" Type="Self.Aluguer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="nr_cliente" />
+            </Principal>
+            <Dependent Role="Aluguer">
+              <PropertyRef Name="cliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Aluguer__local_e__3F115E1A">
+          <End Role="Local" Type="Self.Local" Multiplicity="1" />
+          <End Role="Aluguer" Type="Self.Aluguer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Local">
+              <PropertyRef Name="codigo" />
+            </Principal>
+            <Dependent Role="Aluguer">
+              <PropertyRef Name="local_entrega" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Aluguer__local_r__3E1D39E1">
+          <End Role="Local" Type="Self.Local" Multiplicity="1" />
+          <End Role="Aluguer" Type="Self.Aluguer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Local">
+              <PropertyRef Name="codigo" />
+            </Principal>
+            <Dependent Role="Aluguer">
+              <PropertyRef Name="local_recolha" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Aluguer__veiculo__40F9A68C">
+          <End Role="Veiculo" Type="Self.Veiculo" Multiplicity="0..1" />
+          <End Role="Aluguer" Type="Self.Aluguer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Veiculo">
+              <PropertyRef Name="matricula" />
+            </Principal>
+            <Dependent Role="Aluguer">
+              <PropertyRef Name="veiculo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__LogEvento__alugu__45BE5BA9">
+          <End Role="Aluguer" Type="Self.Aluguer" Multiplicity="1" />
+          <End Role="LogEvento" Type="Self.LogEvento" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Aluguer">
+              <PropertyRef Name="ref" />
+            </Principal>
+            <Dependent Role="LogEvento">
+              <PropertyRef Name="aluguer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Precario__rentac__3A4CA8FD">
+          <End Role="Empresa_Aluguer" Type="Self.Empresa_Aluguer" Multiplicity="1" />
+          <End Role="Precario" Type="Self.Precario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresa_Aluguer">
+              <PropertyRef Name="nome" />
+            </Principal>
+            <Dependent Role="Precario">
+              <PropertyRef Name="rentacar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Veiculo__rentaca__367C1819">
+          <End Role="Empresa_Aluguer" Type="Self.Empresa_Aluguer" Multiplicity="1" />
+          <End Role="Veiculo" Type="Self.Veiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Empresa_Aluguer">
+              <PropertyRef Name="nome" />
+            </Principal>
+            <Dependent Role="Veiculo">
+              <PropertyRef Name="rentacar" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Precario__grupo__3B40CD36">
+          <End Role="Grupo" Type="Self.Grupo" Multiplicity="1" />
+          <End Role="Precario" Type="Self.Precario" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grupo">
+              <PropertyRef Name="designacao" />
+            </Principal>
+            <Dependent Role="Precario">
+              <PropertyRef Name="grupo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Veiculo__grupo__37703C52">
+          <End Role="Grupo" Type="Self.Grupo" Multiplicity="1" />
+          <End Role="Veiculo" Type="Self.Veiculo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Grupo">
+              <PropertyRef Name="designacao" />
+            </Principal>
+            <Dependent Role="Veiculo">
+              <PropertyRef Name="grupo" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SI2_1314i_TPEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Aluguer" EntityType="Self.Aluguer" />
+          <EntitySet Name="Cliente" EntityType="Self.Cliente" />
+          <EntitySet Name="Empresa_Aluguer" EntityType="Self.Empresa_Aluguer" />
+          <EntitySet Name="Grupo" EntityType="Self.Grupo" />
+          <EntitySet Name="Local" EntityType="Self.Local" />
+          <EntitySet Name="LogEvento" EntityType="Self.LogEvento" />
+          <EntitySet Name="Precario" EntityType="Self.Precario" />
+          <EntitySet Name="Veiculo" EntityType="Self.Veiculo" />
+          <AssociationSet Name="FK__Aluguer__41EDCAC5" Association="Self.FK__Aluguer__41EDCAC5">
+            <End Role="Precario" EntitySet="Precario" />
+            <End Role="Aluguer" EntitySet="Aluguer" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Aluguer__cliente__40058253" Association="Self.FK__Aluguer__cliente__40058253">
+            <End Role="Cliente" EntitySet="Cliente" />
+            <End Role="Aluguer" EntitySet="Aluguer" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Aluguer__local_e__3F115E1A" Association="Self.FK__Aluguer__local_e__3F115E1A">
+            <End Role="Local" EntitySet="Local" />
+            <End Role="Aluguer" EntitySet="Aluguer" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Aluguer__local_r__3E1D39E1" Association="Self.FK__Aluguer__local_r__3E1D39E1">
+            <End Role="Local" EntitySet="Local" />
+            <End Role="Aluguer" EntitySet="Aluguer" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Aluguer__veiculo__40F9A68C" Association="Self.FK__Aluguer__veiculo__40F9A68C">
+            <End Role="Veiculo" EntitySet="Veiculo" />
+            <End Role="Aluguer" EntitySet="Aluguer" />
+          </AssociationSet>
+          <AssociationSet Name="FK__LogEvento__alugu__45BE5BA9" Association="Self.FK__LogEvento__alugu__45BE5BA9">
+            <End Role="Aluguer" EntitySet="Aluguer" />
+            <End Role="LogEvento" EntitySet="LogEvento" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Precario__rentac__3A4CA8FD" Association="Self.FK__Precario__rentac__3A4CA8FD">
+            <End Role="Empresa_Aluguer" EntitySet="Empresa_Aluguer" />
+            <End Role="Precario" EntitySet="Precario" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Veiculo__rentaca__367C1819" Association="Self.FK__Veiculo__rentaca__367C1819">
+            <End Role="Empresa_Aluguer" EntitySet="Empresa_Aluguer" />
+            <End Role="Veiculo" EntitySet="Veiculo" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Precario__grupo__3B40CD36" Association="Self.FK__Precario__grupo__3B40CD36">
+            <End Role="Grupo" EntitySet="Grupo" />
+            <End Role="Precario" EntitySet="Precario" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Veiculo__grupo__37703C52" Association="Self.FK__Veiculo__grupo__37703C52">
+            <End Role="Grupo" EntitySet="Grupo" />
+            <End Role="Veiculo" EntitySet="Veiculo" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SI2_1314i_TPModelStoreContainer" CdmEntityContainer="SI2_1314i_TPEntities">
+          <EntitySetMapping Name="Aluguer">
+            <EntityTypeMapping TypeName="SI2_1314i_TPModel.Aluguer">
+              <MappingFragment StoreEntitySet="Aluguer">
+                <ScalarProperty Name="ref" ColumnName="ref" />
+                <ScalarProperty Name="data_reserva" ColumnName="data_reserva" />
+                <ScalarProperty Name="local_recolha" ColumnName="local_recolha" />
+                <ScalarProperty Name="datahora_recolha" ColumnName="datahora_recolha" />
+                <ScalarProperty Name="local_entrega" ColumnName="local_entrega" />
+                <ScalarProperty Name="datahora_entrega" ColumnName="datahora_entrega" />
+                <ScalarProperty Name="tarifa_base_a_aplicar" ColumnName="tarifa_base_a_aplicar" />
+                <ScalarProperty Name="nr_dias" ColumnName="nr_dias" />
+                <ScalarProperty Name="valor_total" ColumnName="valor_total" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="cliente" ColumnName="cliente" />
+                <ScalarProperty Name="rentacar" ColumnName="rentacar" />
+                <ScalarProperty Name="grupo" ColumnName="grupo" />
+                <ScalarProperty Name="veiculo" ColumnName="veiculo" />
+                <ScalarProperty Name="km_inicio" ColumnName="km_inicio" />
+                <ScalarProperty Name="km_fim" ColumnName="km_fim" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cliente">
+            <EntityTypeMapping TypeName="SI2_1314i_TPModel.Cliente">
+              <MappingFragment StoreEntitySet="Cliente">
+                <ScalarProperty Name="nr_cliente" ColumnName="nr_cliente" />
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="telefone" ColumnName="telefone" />
+                <ScalarProperty Name="nif" ColumnName="nif" />
+                <ScalarProperty Name="pontos" ColumnName="pontos" />
+                <ScalarProperty Name="tipo" ColumnName="tipo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Empresa_Aluguer">
+            <EntityTypeMapping TypeName="SI2_1314i_TPModel.Empresa_Aluguer">
+              <MappingFragment StoreEntitySet="Empresa_Aluguer">
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="morada" ColumnName="morada" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Grupo">
+            <EntityTypeMapping TypeName="SI2_1314i_TPModel.Grupo">
+              <MappingFragment StoreEntitySet="Grupo">
+                <ScalarProperty Name="designacao" ColumnName="designacao" />
+                <ScalarProperty Name="descrição" ColumnName="descrição" />
+                <ScalarProperty Name="freesale" ColumnName="freesale" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Local">
+            <EntityTypeMapping TypeName="SI2_1314i_TPModel.Local">
+              <MappingFragment StoreEntitySet="Local">
+                <ScalarProperty Name="codigo" ColumnName="codigo" />
+                <ScalarProperty Name="nome" ColumnName="nome" />
+                <ScalarProperty Name="morada" ColumnName="morada" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LogEvento">
+            <EntityTypeMapping TypeName="SI2_1314i_TPModel.LogEvento">
+              <MappingFragment StoreEntitySet="LogEvento">
+                <ScalarProperty Name="ref" ColumnName="ref" />
+                <ScalarProperty Name="aluguer" ColumnName="aluguer" />
+                <ScalarProperty Name="data" ColumnName="data" />
+                <ScalarProperty Name="mensagem" ColumnName="mensagem" />
+                <ScalarProperty Name="tipo" ColumnName="tipo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Precario">
+            <EntityTypeMapping TypeName="SI2_1314i_TPModel.Precario">
+              <MappingFragment StoreEntitySet="Precario">
+                <ScalarProperty Name="rentacar" ColumnName="rentacar" />
+                <ScalarProperty Name="grupo" ColumnName="grupo" />
+                <ScalarProperty Name="tarifa_base" ColumnName="tarifa_base" />
+                <ScalarProperty Name="quota_freesale" ColumnName="quota_freesale" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Veiculo">
+            <EntityTypeMapping TypeName="SI2_1314i_TPModel.Veiculo">
+              <MappingFragment StoreEntitySet="Veiculo">
+                <ScalarProperty Name="ref" ColumnName="ref" />
+                <ScalarProperty Name="rentacar" ColumnName="rentacar" />
+                <ScalarProperty Name="data_registo" ColumnName="data_registo" />
+                <ScalarProperty Name="matricula" ColumnName="matricula" />
+                <ScalarProperty Name="marca" ColumnName="marca" />
+                <ScalarProperty Name="modelo" ColumnName="modelo" />
+                <ScalarProperty Name="ano_modelo" ColumnName="ano_modelo" />
+                <ScalarProperty Name="cor" ColumnName="cor" />
+                <ScalarProperty Name="nr_portas" ColumnName="nr_portas" />
+                <ScalarProperty Name="kilom_actual" ColumnName="kilom_actual" />
+                <ScalarProperty Name="grupo" ColumnName="grupo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="21a8dfc96e4444a6bd676a3fabeff74e" Name="Diagram1">
+        <EntityTypeShape EntityType="SI2_1314i_TPModel.Aluguer" Width="1.5" PointX="8.25" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2_1314i_TPModel.Cliente" Width="1.5" PointX="6" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2_1314i_TPModel.Empresa_Aluguer" Width="1.5" PointX="0.75" PointY="5.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2_1314i_TPModel.Grupo" Width="1.5" PointX="3.75" PointY="2.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2_1314i_TPModel.Local" Width="1.5" PointX="6" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2_1314i_TPModel.LogEvento" Width="1.5" PointX="10.5" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2_1314i_TPModel.Precario" Width="1.5" PointX="3" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="SI2_1314i_TPModel.Veiculo" Width="1.5" PointX="6" PointY="4.5" IsExpanded="true" />
+        <AssociationConnector Association="SI2_1314i_TPModel.FK__Aluguer__41EDCAC5" ManuallyRouted="false" />
+        <AssociationConnector Association="SI2_1314i_TPModel.FK__Aluguer__cliente__40058253" ManuallyRouted="false" />
+        <AssociationConnector Association="SI2_1314i_TPModel.FK__Aluguer__local_e__3F115E1A" ManuallyRouted="false" />
+        <AssociationConnector Association="SI2_1314i_TPModel.FK__Aluguer__local_r__3E1D39E1" ManuallyRouted="false" />
+        <AssociationConnector Association="SI2_1314i_TPModel.FK__Aluguer__veiculo__40F9A68C" ManuallyRouted="false" />
+        <AssociationConnector Association="SI2_1314i_TPModel.FK__LogEvento__alugu__45BE5BA9" ManuallyRouted="false" />
+        <AssociationConnector Association="SI2_1314i_TPModel.FK__Precario__rentac__3A4CA8FD" ManuallyRouted="false" />
+        <AssociationConnector Association="SI2_1314i_TPModel.FK__Veiculo__rentaca__367C1819" ManuallyRouted="false" />
+        <AssociationConnector Association="SI2_1314i_TPModel.FK__Precario__grupo__3B40CD36" ManuallyRouted="false" />
+        <AssociationConnector Association="SI2_1314i_TPModel.FK__Veiculo__grupo__37703C52" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
