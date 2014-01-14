@@ -72,12 +72,18 @@ namespace Exercicio4
 
         static void Main(string[] args)
         {
+<<<<<<< HEAD
+            //ponto2(2,0);
+            Ponto1(4, new DateTime(2000, 1, 1), new DateTime(2019, 2, 13));
+           
+=======
             const int pontos = 200, cliente = 0;
             Console.WriteLine("\n\n\tFoi atribuido " + pontos + " pontos ao cliente " + cliente);
             ponto2(pontos, cliente);
             Console.WriteLine("--------Clique numa tecla---------");
             Console.ReadKey();
             ponto2(-pontos, cliente);
+>>>>>>> 5a811c8014ff79e194d93f444231b31a3d896210
         }
     }
 }
