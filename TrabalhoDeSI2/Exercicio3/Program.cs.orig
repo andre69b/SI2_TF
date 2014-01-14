@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,6 +10,7 @@ namespace Exercicio3
 {
     class Program
     {
+<<<<<<< HEAD
 
         public static void Ponto1(int cliente, DateTime inicio, DateTime fim)
         {
@@ -64,31 +65,86 @@ namespace Exercicio3
             }
         }
 
-        private static void ponto2(int points, int clienteId)
+        private static void ponto2(int points,int clienteId)
+=======
+        public static void Ponto1(int cliente, DateTime inicio, DateTime fim)
+>>>>>>> ponto 1 do exercicio 3
         {
             using (var ctx = new SI2_1314i_TPEntities())
             {
-                var q = (from a in ctx.Cliente
-                         where a.nr_cliente == clienteId
+                 var q1 = (from a in ctx.Aluguer 
+                         where a.cliente == cliente && a.datahora_recolha >= inicio && a.datahora_entrega <=fim
                          select a
                         );
-                foreach (var cliente in q)
+                int index = 1;
+                Console.WriteLine("Lista de alugueres: ");
+                var aux= new ArrayList();
+                bool Nentrou = true;
+                foreach (var c in q1)
+                {
+                    Nentrou = false;
+                    aux.Add(c.@ref);
+                    Console.WriteLine((index++)+"º - aluguer:" + c.@ref);
+                }
+                if (Nentrou)
+                {
+                    Console.WriteLine("Não existem Alugueres para o Cliente escolhido");
+                    return;
+                }
+                Console.WriteLine("Qual é o aluguer que deseja selecionar ?");
+                int num = 0;
+                while (true)
+                {
+                    string text = Console.ReadLine();
+                    if (text != null)
+                    {
+                        num = int.Parse(text)-1;
+                        if (aux.Count>=num && num>=0)
+                        {
+                            num = (int)aux[num];
+                            break;
+                        }
+                       
+                    }
+                }
+                var q2 = (from b in ctx.LogEvento
+                          where b.aluguer == num
+                          select b);
+                Nentrou = true;
+                foreach (var c in q2)
+                {
+                    Nentrou = false;
+                    Console.WriteLine("Tipo:"+c.tipo+" Data:"+c.data+"\nMensagem: "+c.mensagem+"\n");
+                }
+                if(Nentrou)
+                    Console.WriteLine("Não existem eventos para o aluguer escolhido");
+                
+                Console.ReadKey();
+            }
+        }
+
                 {
                     cliente.pontos += points;
                 }
                 ctx.SaveChanges();
             }
         }
-
         static void Main(string[] args)
         {
+<<<<<<< HEAD
             const int pontos = 200, cliente = 0;
             Ponto1(0, new DateTime(2000, 1, 1), new DateTime(2019, 2, 13));
-            Console.WriteLine("\n\n\tFoi atribuido " + pontos + " pontos ao cliente " + cliente);
-            ponto2(pontos, cliente);
+            Console.WriteLine("\n\n\tFoi atribuido "+pontos+" pontos ao cliente "+cliente);
+            ponto2(pontos,cliente);
             Console.WriteLine("--------Clique numa tecla---------");
             Console.ReadKey();
             ponto2(-pontos, cliente);
+=======
+
+            Ponto1(4,new DateTime(2014,1,1),new DateTime(2014,2,13));
+        {
+            ponto2(2,0);
+>>>>>>> ponto 1 do exercicio 3
         }
     }
 }
