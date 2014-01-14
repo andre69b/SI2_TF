@@ -10,7 +10,7 @@ namespace Exercicio3
     class Program
     {
 
-        private static Boolean ponto2(int points,int clienteId)
+        private static void ponto2(int points,int clienteId)
         {
             using (var ctx = new SI2_1314i_TPEntities())
             {
@@ -24,8 +24,6 @@ namespace Exercicio3
                 }
                 ctx.SaveChanges();
             }
-
-            return true;
         }
 
         static void Main(string[] args)
