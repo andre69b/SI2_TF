@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -78,15 +79,54 @@ namespace Exercicio3
             }
         }
 
+        private static void ponto3(string empresa) { 
+            using(var ctx = new SI2_1314i_TPEntities())
+            {
+                bool blankCheck = ctx.Aluguer.Any(a => (a.estado == "finalizado" || a.estado == "cancelado") 
+                                                       && a.rentacar == empresa);
+                if (!blankCheck) 
+                    Console.WriteLine("Ainda há alugueres em curso associados à empresa seleccionada para eliminação.");
+                else
+                {
+                    var q = (from a in ctx.Veiculo
+                             where a.rentacar == empresa
+                             select a);
+
+                    foreach (var veiculo in q) ctx.Veiculo.Remove(veiculo);
+
+                    var f = (from a in ctx.Aluguer
+                             where a.rentacar == empresa
+                             select a);
+
+                    foreach (var aluguer in f) ctx.Aluguer.Remove(aluguer);
+
+                    var e = (from a in ctx.Precario
+                             where a.rentacar == empresa
+                             select a);
+
+                    foreach (var precario in e) ctx.Precario.Remove(precario);
+
+                    var res = ctx.Empresa_Aluguer.First(n => n.nome == empresa);
+                    ctx.Empresa_Aluguer.Remove(res);
+                    Console.WriteLine("A empresa foi removida com sucesso");
+                    ctx.SaveChanges();
+                }
+                
+            }
+            
+        }
         static void Main(string[] args)
         {
-            const int pontos = 200, cliente = 4;
+            /*const int pontos = 200, cliente = 4;
             Ponto1(cliente, new DateTime(2000, 1, 1), new DateTime(2019, 2, 13));
             Console.WriteLine("\n\n\tFoi atribuido " + pontos + " pontos ao cliente " + cliente);
             ponto2(pontos, cliente);
             Console.WriteLine("--------Clique numa tecla---------");
             Console.ReadKey();
-            ponto2(-pontos, cliente);
+            ponto2(-pontos, cliente);*/
+            string empName = "Emp Vasco";
+            ponto3(empName);
+
         }
     }
 }

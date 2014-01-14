@@ -71,6 +71,53 @@ namespace Exercicio4
 
         }
 
+        private static void ponto3(string empresa)
+        {
+            var session = new Session();
+            Boolean connFlag = session.OpenConnection();
+            Boolean tranFlag = session.BeginTran();
+            var cmd = session.CreateCommand();
+            cmd.CommandText = "SELECT Aluguer.ref a from Aluguer where ((estado = 'finalizado' OR estado = 'cancelado') AND rentacar = @nomeEmp)";
+            var p1 = new SqlParameter("@nomeEmp", empresa);
+            cmd.Parameters.Add(p1);
+            int a1 = (int)cmd.ExecuteScalar();
+
+            if (a1 == null)
+                Console.WriteLine("Ainda há alugueres em curso associados à empresa seleccionada para eliminação.");
+            else
+            {
+                try
+                {
+                    cmd.CommandText = "DELETE from Aluguer where (rentacar = @nomeEmp)";
+                    cmd.Parameters.Add(p1);
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = "DELETE from Veiculo where (rentacar = @nomeEmp)";
+                    cmd.Parameters.Add(p1);
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = "DELETE from Precario where (rentacar = @nomeEmp)";
+                    cmd.Parameters.Add(p1);
+                    cmd.ExecuteNonQuery();
+
+                    cmd.CommandText = "DELETE from Empresa_Aluguer where (rentacar = @nomeEmp)";
+                    cmd.Parameters.Add(p1);
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Ocorreu um erro a eliminar uma das tabelas.");
+                    throw;
+                }
+                finally
+                {
+                    session.EndTransaction(true, tranFlag);
+                    session.CloseConnection(connFlag); 
+                }
+                Console.WriteLine("A empresa foi eliminada com sucesso.");
+            }
+        }
+
         static void Main(string[] args)
         {
             const int pontos = 200, cliente = 4;
@@ -80,6 +127,7 @@ namespace Exercicio4
 //            Console.WriteLine("--------Clique numa tecla---------");
 //            Console.ReadKey();
 //            Ponto2(-pontos, cliente);
+            ponto3("Emp Vasco");
         }
     }
 }
