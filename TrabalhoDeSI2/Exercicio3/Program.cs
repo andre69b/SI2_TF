@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -9,6 +10,59 @@ namespace Exercicio3
 {
     class Program
     {
+
+        public static void Ponto1(int cliente, DateTime inicio, DateTime fim)
+        {
+            using (var ctx = new SI2_1314i_TPEntities())
+            {
+                var q1 = (from a in ctx.Aluguer
+                          where a.cliente == cliente && a.datahora_recolha >= inicio && a.datahora_entrega <= fim
+                          select a
+                       );
+                int index = 1;
+                Console.WriteLine("Lista de alugueres: ");
+                var aux = new ArrayList();
+                bool Nentrou = true;
+                foreach (var c in q1)
+                {
+                    Nentrou = false;
+                    aux.Add(c.@ref);
+                    Console.WriteLine((index++) + "º - aluguer:" + c.@ref);
+                }
+                if (Nentrou)
+                {
+                    Console.WriteLine("Nao existem Alugueres para o Cliente escolhido");
+                    return;
+                }
+                Console.WriteLine("Qual é o aluguer que deseja selecionar ?");
+                int num = 0;
+                while (true)
+                {
+                    string text = Console.ReadLine();
+                    if (text != null)
+                    {
+                        num = int.Parse(text) - 1;
+                        if (aux.Count >= num && num >= 0)
+                        {
+                            num = (int)aux[num];
+                            break;
+                        }
+
+                    }
+                }
+                var q2 = (from b in ctx.LogEvento
+                          where b.aluguer == num
+                          select b);
+                Nentrou = true;
+                foreach (var c in q2)
+                {
+                    Nentrou = false;
+                    Console.WriteLine("Tipo:" + c.tipo + " Data:" + c.data + "\nMensagem: " + c.mensagem + "\n");
+                }
+                if (Nentrou)
+                    Console.WriteLine("Nao existem eventos para o aluguer escolhido");
+            }
+        }
 
         private static void ponto2(int points,int clienteId)
         {
@@ -28,7 +82,13 @@ namespace Exercicio3
 
         static void Main(string[] args)
         {
-            ponto2(2,0);
+            const int pontos = 200, cliente = 0;
+            Ponto1(0, new DateTime(2000, 1, 1), new DateTime(2019, 2, 13));
+            Console.WriteLine("\n\n\tFoi atribuido "+pontos+" pontos ao cliente "+cliente);
+            ponto2(pontos,cliente);
+            Console.WriteLine("--------Clique numa tecla---------");
+            Console.ReadKey();
+            ponto2(-pontos, cliente);
         }
     }
 }
