@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Exercicio3
+namespace Exercicio4
 {
     public abstract class AbstractSession : ISession
     {
-        private SqlTransaction currentTrans = null;
-        private SqlConnection currentConn = null;
+        private SqlTransaction currentTrans;
+        private SqlConnection currentConn;
         private string cs;
         private bool TransactionVotes;
 

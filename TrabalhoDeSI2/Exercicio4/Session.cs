@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Exercicio3;
 
-namespace Exercicio3
+namespace Exercicio4
 {
     public class Session : AbstractSession
     {
