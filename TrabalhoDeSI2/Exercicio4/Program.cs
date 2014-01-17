@@ -5,7 +5,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Exercicio3;
 
 namespace Exercicio4
 {
@@ -44,6 +43,37 @@ namespace Exercicio4
                 Console.WriteLine("Nao existem Alugueres para o Cliente escolhido");
                 
             }
+           
+            Console.WriteLine("Qual é o aluguer que deseja selecionar ?");
+            int num = 0;
+            while (true)
+            {
+                string text = Console.ReadLine();
+                if (text != null)
+                {
+                    num = int.Parse(text) - 1;
+                    if (aux.Count >= num && num >= 0)
+                    {
+                        num = (int)aux[num];
+                        break;
+                    }
+
+                }
+            }
+
+            cmd.CommandText = "SELECT * from LogEvento where aluguer= @aluguer";
+            p1 = new SqlParameter("@aluguer", num);
+            cmd.Parameters.Add(p1);
+            r1.Close();
+            r1 = cmd.ExecuteReader();
+            bool nentrou = true;
+            while (r1.Read())
+            {
+                nentrou = false;
+                Console.WriteLine("Tipo:" + r1.GetValue(4) + " Data:" + r1.GetValue(2) + "\nMensagem: " + r1.GetValue(3) + "\n");
+            }
+            if (nentrou)
+                Console.WriteLine("Nao existem eventos para o aluguer escolhido");
             //session.EndTransaction(false, tranFlag);
             session.CloseConnection(connFlag);
             
@@ -127,7 +157,7 @@ namespace Exercicio4
 //            Console.WriteLine("--------Clique numa tecla---------");
 //            Console.ReadKey();
 //            Ponto2(-pontos, cliente);
-            ponto3("Emp Vasco");
+//            ponto3("Emp Vasco");
         }
     }
 }
