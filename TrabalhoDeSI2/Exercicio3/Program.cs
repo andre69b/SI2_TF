@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace Exercicio3
 {
@@ -14,52 +15,56 @@ namespace Exercicio3
 
         public static void Ponto1(int cliente, DateTime inicio, DateTime fim)
         {
-            using (var ctx = new SI2_1314i_TPEntities())
+            using (var ts = new TransactionScope(TransactionScopeOption.Required,
+                new TransactionOptions {IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted}))
             {
-                var q1 = (from a in ctx.Aluguer
-                          where a.cliente == cliente && a.datahora_recolha >= inicio && a.datahora_entrega <= fim
-                          select a
-                       );
-                int index = 1;
-                Console.WriteLine("Lista de alugueres: ");
-                var aux = new ArrayList();
-                foreach (var c in q1)
+                using (var ctx = new SI2_1314i_TPEntities())
                 {
-                    aux.Add(c.@ref);
-                    Console.WriteLine((index++) + "º - aluguer:" + c.@ref);
-                }
-                if (index==1)
-                {
-                    Console.WriteLine("Nao existem Alugueres para o Cliente escolhido");
-                    return;
-                }
-                Console.WriteLine("Qual é o aluguer que deseja selecionar ?");
-                int num = 0;
-                while (true)
-                {
-                    string text = Console.ReadLine();
-                    if (text != null)
+                    var q1 = (from a in ctx.Aluguer
+                        where a.cliente == cliente && a.datahora_recolha >= inicio && a.datahora_entrega <= fim
+                        select a
+                        );
+                    int index = 1;
+                    Console.WriteLine("Lista de alugueres: ");
+                    var aux = new ArrayList();
+                    foreach (var c in q1)
                     {
-                        num = int.Parse(text) - 1;
-                        if (aux.Count >= num && num >= 0)
-                        {
-                            num = (int)aux[num];
-                            break;
-                        }
-
+                        aux.Add(c.@ref);
+                        Console.WriteLine((index++) + "º - aluguer:" + c.@ref);
                     }
+                    if (index == 1)
+                    {
+                        Console.WriteLine("Nao existem Alugueres para o Cliente escolhido");
+                        return;
+                    }
+                    Console.WriteLine("Qual é o aluguer que deseja selecionar ?");
+                    int num = 0;
+                    while (true)
+                    {
+                        string text = Console.ReadLine();
+                        if (text != null)
+                        {
+                            num = int.Parse(text) - 1;
+                            if (aux.Count >= num && num >= 0)
+                            {
+                                num = (int) aux[num];
+                                break;
+                            }
+
+                        }
+                    }
+                    var q2 = (from b in ctx.LogEvento
+                        where b.aluguer == num
+                        select b);
+                    bool nentrou = true;
+                    foreach (var c in q2)
+                    {
+                        nentrou = false;
+                        Console.WriteLine("Tipo:" + c.tipo + " Data:" + c.data + "\nMensagem: " + c.mensagem + "\n");
+                    }
+                    if (nentrou)
+                        Console.WriteLine("Nao existem eventos para o aluguer escolhido");
                 }
-                var q2 = (from b in ctx.LogEvento
-                          where b.aluguer == num
-                          select b);
-                bool nentrou = true;
-                foreach (var c in q2)
-                {
-                    nentrou = false;
-                    Console.WriteLine("Tipo:" + c.tipo + " Data:" + c.data + "\nMensagem: " + c.mensagem + "\n");
-                }
-                if (nentrou)
-                    Console.WriteLine("Nao existem eventos para o aluguer escolhido");
             }
         }
 
