@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,7 @@ namespace Exercicio4
         {
             var session = new Session();
             Boolean connFlag = session.OpenConnection();
-            //Boolean tranFlag = session.BeginTran();
+            Boolean tranFlag = session.BeginTran(IsolationLevel.ReadCommitted);
 
             var cmd = session.CreateCommand();
             cmd.CommandText = "SELECT * from Aluguer where cliente= @cliente and datahora_recolha >= @inicio" +
@@ -74,7 +75,9 @@ namespace Exercicio4
             }
             if (nentrou)
                 Console.WriteLine("Nao existem eventos para o aluguer escolhido");
-            //session.EndTransaction(false, tranFlag);
+            
+            r1.Close();
+            session.EndTransaction(true, tranFlag);
             session.CloseConnection(connFlag);
             
         }
@@ -82,7 +85,7 @@ namespace Exercicio4
         {
             var session = new Session();
             Boolean connFlag = session.OpenConnection();
-            Boolean tranFlag = session.BeginTran();
+            Boolean tranFlag = session.BeginTran(IsolationLevel.RepeatableRead);
             var cmd = session.CreateCommand();
             cmd.CommandText = "SELECT pontos from Cliente where nr_cliente=@nCliente";
             var p1 = new SqlParameter("@nCliente", clienteId);
@@ -101,11 +104,11 @@ namespace Exercicio4
 
         }
 
-        private static void ponto3(string empresa)
+        private static void Ponto3(string empresa)
         {
             var session = new Session();
             Boolean connFlag = session.OpenConnection();
-            Boolean tranFlag = session.BeginTran();
+            Boolean tranFlag = session.BeginTran(IsolationLevel.ReadUncommitted);
             var cmd = session.CreateCommand();
             cmd.CommandText = "SELECT Aluguer.ref a from Aluguer where ((estado = 'finalizado' OR estado = 'cancelado') AND rentacar = @nomeEmp)";
             var p1 = new SqlParameter("@nomeEmp", empresa);
@@ -157,7 +160,7 @@ namespace Exercicio4
 //            Console.WriteLine("--------Clique numa tecla---------");
 //            Console.ReadKey();
 //            Ponto2(-pontos, cliente);
-//            ponto3("Emp Vasco");
+//            Ponto3("Emp Vasco");
         }
     }
 }

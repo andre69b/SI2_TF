@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace Exercicio4
@@ -16,7 +17,7 @@ namespace Exercicio4
             cs = ConfigurationManager.ConnectionStrings["SI2_1314i_TPEntities"].ConnectionString;
         }
 
-        public bool BeginTran()
+        public bool BeginTran(IsolationLevel ilevel)
         {
             bool st = false;
             if (currentConn == null)
@@ -25,7 +26,7 @@ namespace Exercicio4
             }
             if (currentTrans == null)
             {
-                currentTrans = currentConn.BeginTransaction();
+                currentTrans = currentConn.BeginTransaction(ilevel);
                 TransactionVotes = true;
                 st = true;
             }
