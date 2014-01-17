@@ -70,55 +70,63 @@ namespace Exercicio3
 
         private static void ponto2(int points, int clienteId)
         {
-            using (var ctx = new SI2_1314i_TPEntities())
+            using (var ts = new TransactionScope(TransactionScopeOption.Required,
+                new TransactionOptions {IsolationLevel = System.Transactions.IsolationLevel.RepeatableRead}))
             {
-                var q = (from a in ctx.Cliente
-                         where a.nr_cliente == clienteId
-                         select a
-                        );
-                foreach (var cliente in q)
+                using (var ctx = new SI2_1314i_TPEntities())
                 {
-                    cliente.pontos += points;
+                    var q = (from a in ctx.Cliente
+                        where a.nr_cliente == clienteId
+                        select a
+                        );
+                    foreach (var cliente in q)
+                    {
+                        cliente.pontos += points;
+                    }
+                    ctx.SaveChanges();
                 }
-                ctx.SaveChanges();
             }
         }
 
-        private static void ponto3(string empresa) { 
-            using(var ctx = new SI2_1314i_TPEntities())
+        private static void ponto3(string empresa) {
+            using (var ts = new TransactionScope(TransactionScopeOption.Required,
+                new TransactionOptions {IsolationLevel = System.Transactions.IsolationLevel.RepeatableRead}))
             {
-                bool blankCheck = ctx.Aluguer.Any(a => (a.estado == "finalizado" || a.estado == "cancelado") 
-                                                       && a.rentacar == empresa);
-                if (!blankCheck) 
-                    Console.WriteLine("Ainda há alugueres em curso associados à empresa seleccionada para eliminação.");
-                else
+                using (var ctx = new SI2_1314i_TPEntities())
                 {
-                    var q = (from a in ctx.Veiculo
-                             where a.rentacar == empresa
-                             select a);
+                    bool blankCheck = ctx.Aluguer.Any(a => (a.estado == "finalizado" || a.estado == "cancelado")
+                                                            && a.rentacar == empresa);
+                    if (!blankCheck)
+                        Console.WriteLine(
+                            "Ainda há alugueres em curso associados à empresa seleccionada para eliminação.");
+                    else
+                    {
+                        var q = (from a in ctx.Veiculo
+                            where a.rentacar == empresa
+                            select a);
 
-                    foreach (var veiculo in q) ctx.Veiculo.Remove(veiculo);
+                        foreach (var veiculo in q) ctx.Veiculo.Remove(veiculo);
 
-                    var f = (from a in ctx.Aluguer
-                             where a.rentacar == empresa
-                             select a);
+                        var f = (from a in ctx.Aluguer
+                            where a.rentacar == empresa
+                            select a);
 
-                    foreach (var aluguer in f) ctx.Aluguer.Remove(aluguer);
+                        foreach (var aluguer in f) ctx.Aluguer.Remove(aluguer);
 
-                    var e = (from a in ctx.Precario
-                             where a.rentacar == empresa
-                             select a);
+                        var e = (from a in ctx.Precario
+                            where a.rentacar == empresa
+                            select a);
 
-                    foreach (var precario in e) ctx.Precario.Remove(precario);
+                        foreach (var precario in e) ctx.Precario.Remove(precario);
 
-                    var res = ctx.Empresa_Aluguer.First(n => n.nome == empresa);
-                    ctx.Empresa_Aluguer.Remove(res);
-                    Console.WriteLine("A empresa foi removida com sucesso");
-                    ctx.SaveChanges();
+                        var res = ctx.Empresa_Aluguer.First(n => n.nome == empresa);
+                        ctx.Empresa_Aluguer.Remove(res);
+                        Console.WriteLine("A empresa foi removida com sucesso");
+                        ctx.SaveChanges();
+                    }
                 }
-                
             }
-            
+
         }
         static void Main(string[] args)
         {
