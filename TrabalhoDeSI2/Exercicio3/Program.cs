@@ -137,7 +137,7 @@ namespace Exercicio3
             Console.WriteLine("--------Clique numa tecla---------");
             Console.ReadKey();
             ponto2(-pontos, cliente);*/
-            string empName = "Emp Vasco";
+            string empName = "Emp Isel";
             ponto3(empName);
 
         }
