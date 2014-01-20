@@ -90,7 +90,7 @@ namespace Exercicio3
 
         private static void ponto3(string empresa) {
             using (var ts = new TransactionScope(TransactionScopeOption.Required,
-                new TransactionOptions {IsolationLevel = System.Transactions.IsolationLevel.RepeatableRead}))
+                new TransactionOptions {IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted}))
             {
                 using (var ctx = new SI2_1314i_TPEntities())
                 {
@@ -101,23 +101,24 @@ namespace Exercicio3
                             "Ainda há alugueres em curso associados à empresa seleccionada para eliminação.");
                     else
                     {
+                        var f = (from a in ctx.Aluguer
+                                 where a.rentacar == empresa
+                                 select a);
+
+                        ctx.Aluguer.RemoveRange(f);
+                        
+                        
                         var q = (from a in ctx.Veiculo
                             where a.rentacar == empresa
                             select a);
 
-                        foreach (var veiculo in q) ctx.Veiculo.Remove(veiculo);
-
-                        var f = (from a in ctx.Aluguer
-                            where a.rentacar == empresa
-                            select a);
-
-                        foreach (var aluguer in f) ctx.Aluguer.Remove(aluguer);
+                        ctx.Veiculo.RemoveRange(q);
 
                         var e = (from a in ctx.Precario
                             where a.rentacar == empresa
                             select a);
 
-                        foreach (var precario in e) ctx.Precario.Remove(precario);
+                        ctx.Precario.RemoveRange(e);
 
                         var res = ctx.Empresa_Aluguer.First(n => n.nome == empresa);
                         ctx.Empresa_Aluguer.Remove(res);
@@ -125,6 +126,7 @@ namespace Exercicio3
                         ctx.SaveChanges();
                     }
                 }
+                ts.Complete();
             }
 
         }
@@ -137,7 +139,7 @@ namespace Exercicio3
             Console.WriteLine("--------Clique numa tecla---------");
             Console.ReadKey();
             ponto2(-pontos, cliente);*/
-            string empName = "Emp Isel";
+            string empName = "Emp Lisboa";
             ponto3(empName);
 
         }
