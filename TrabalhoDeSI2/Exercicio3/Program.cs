@@ -65,6 +65,7 @@ namespace Exercicio3
                     if (nentrou)
                         Console.WriteLine("Nao existem eventos para o aluguer escolhido");
                 }
+                ts.Complete();
             }
         }
 
@@ -85,6 +86,7 @@ namespace Exercicio3
                     }
                     ctx.SaveChanges();
                 }
+                ts.Complete();
             }
         }
 
@@ -124,6 +126,7 @@ namespace Exercicio3
                         Console.WriteLine("A empresa foi removida com sucesso");
                         ctx.SaveChanges();
                     }
+                    ts.Complete();
                 }
             }
 
